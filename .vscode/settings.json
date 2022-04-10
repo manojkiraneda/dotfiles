@@ -1,0 +1,12 @@
+{
+	"OPENBMC": {
+		"TARGET_IP": "rain118bmc.aus.stglabs.ibm.com",
+		"PROGRAM": "hello.bin",
+		"ARCH": "arm-openbmc-linux",
+		"OECORE_NATIVE_SYSROOT": "/home/juliet/sdk/bmcenv/bmcenv/sysroots/x86_64-oesdk-linux",
+		"SDKTARGETSYSROOT": "/home/juliet/sdk/bmcenv/bmcenv/sysroots/armv7ahf-vfpv4d16-openbmc-linux-gnueabi",
+		"CC_PREFIX": "${config:OPENBMC.OECORE_NATIVE_SYSROOT}/usr/bin/${config:OPENBMC.ARCH}/${config:OPENBMC.ARCH}-",
+		"CXX": "${config:OPENBMC.CC_PREFIX}g++ -march=armv7-a -mfpu=vfpv4-d16 -mfloat-abi=hard -fstack-protector-strong  -O2 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Werror=format-security --sysroot=${config:OPENBMC.SDKTARGETSYSROOT}",
+		"CC": "${config:OPENBMC.CC_PREFIX}gcc -march=armv7-a -mfpu=vfpv4-d16 -mfloat-abi=hard -fstack-protector-strong  -O2 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Werror=format-security --sysroot=${config:OPENBMC.SDKTARGETSYSROOT}"
+	}
+}

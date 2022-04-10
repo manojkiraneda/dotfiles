@@ -1,0 +1,93 @@
+{
+    "version": "2.0.0",
+    "options": {
+        "env": {
+            "CXX": "${config:OPENBMC.CXX}",
+            "CC": "${config:OPENBMC.CC}",
+            "OECORE_NATIVE_SYSROOT": "${config:OPENBMC.OECORE_NATIVE_SYSROOT}",
+            "PATH": "${env:PATH}:${config:OPENBMC.OECORE_NATIVE_SYSROOT}/usr/bin:${config:OPENBMC.OECORE_NATIVE_SYSROOT}/usr/bin/arm-openbmc-linux-gnueabi:${config:OPENBMC.OECORE_NATIVE_SYSROOT}/usr/sbin:${config:OPENBMC.OECORE_NATIVE_SYSROOT}/bin",
+            "SDKTARGETSYSROOT": "/home/juliet/sdk/bmcenv/bmcenv/sysroots/armv7ahf-vfpv4d16-openbmc-linux-gnueabi",
+            "PKG_CONFIG_SYSROOT_DIR": "/home/juliet/sdk/bmcenv/bmcenv/sysroots/armv7ahf-vfpv4d16-openbmc-linux-gnueabi",
+            "PKG_CONFIG_PATH": "/home/juliet/sdk/bmcenv/bmcenv/sysroots/armv7ahf-vfpv4d16-openbmc-linux-gnueabi/usr/lib/pkgconfig:/home/juliet/sdk/bmcenv/bmcenv/sysroots/armv7ahf-vfpv4d16-openbmc-linux-gnueabi/usr/share/pkgconfig",
+            "CONFIG_SITE": "/home/juliet/sdk/bmcenv/bmcenv/site-config-armv7ahf-vfpv4d16-openbmc-linux-gnueabi",
+            "OECORE_ACLOCAL_OPTS": "-I /home/juliet/sdk/bmcenv/bmcenv/sysroots/x86_64-oesdk-linux/usr/share/aclocal",
+            "OECORE_BASELIB": "lib",
+            "OECORE_TARGET_ARCH": "arm",
+            "OECORE_TARGET_OS": "linux-gnueabi",
+            "AS": "arm-openbmc-linux-gnueabi-as",
+            "LD": "arm-openbmc-linux-gnueabi-ld  --sysroot=/home/juliet/sdk/bmcenv/bmcenv/sysroots/armv7ahf-vfpv4d16-openbmc-linux-gnueabi",
+            "GDB": "arm-openbmc-linux-gnueabi-gdb",
+            "STRIP": "arm-openbmc-linux-gnueabi-strip",
+            "RANLIB": "arm-openbmc-linux-gnueabi-ranlib",
+            "OBJCOPY": "arm-openbmc-linux-gnueabi-objcopy",
+            "OBJDUMP": "arm-openbmc-linux-gnueabi-objdump",
+            "READELF": "arm-openbmc-linux-gnueabi-readelf",
+            "AR": "arm-openbmc-linux-gnueabi-ar",
+            "NM": "arm-openbmc-linux-gnueabi-nm",
+            "M4": "m4",
+            "TARGET_PREFIX": "arm-openbmc-linux-gnueabi-",
+            "CONFIGURE_FLAGS": "--target=arm-openbmc-linux-gnueabi --host=arm-openbmc-linux-gnueabi --build=x86_64-linux --with-libtool-sysroot=/home/juliet/sdk/bmcenv/bmcenv/sysroots/armv7ahf-vfpv4d16-openbmc-linux-gnueabi",
+            "CFLAGS": "-O2 -pipe -g -feliminate-unused-debug-types",
+            "CXXFLAGS": "-O2 -pipe -g -feliminate-unused-debug-types",
+            "LDFLAGS": "-Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed  -Wl,-z,relro,-z,now",
+            "KCFLAGS": "--sysroot=/home/juliet/sdk/bmcenv/bmcenv/sysroots/armv7ahf-vfpv4d16-openbmc-linux-gnueabi",
+            "OECORE_DISTRO_VERSION": "nodistro.0",
+            "OECORE_SDK_VERSION": "nodistro.0",
+            "ARCH": "arm",
+            "CROSS_COMPILE": "arm-openbmc-linux-gnueabi-",
+            "OE_CMAKE_TOOLCHAIN_FILE": "/home/juliet/sdk/bmcenv/bmcenv/sysroots/x86_64-oesdk-linux/usr/share/cmake/OEToolchainConfig.cmake",
+            "OPENSSL_CONF": "/home/juliet/sdk/bmcenv/bmcenv/sysroots/x86_64-oesdk-linux/usr/lib/ssl-1.1/openssl.cnf"
+        }
+    },
+    "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true
+    },
+    "tasks": [
+        {
+            "label": "configure",
+            "type": "shell",
+            "command": "meson build",
+            "problemMatcher": [
+                "$gcc"
+            ]
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        },
+        {
+            "label": "Print Env",
+            "type": "shell",
+            "command": "printenv",
+            "args": [],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build"
+            }
+        },
+        {
+            "label": "ninja",
+            "type": "shell",
+            "command": "ninja -C build",
+            "args": [],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build"
+            }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "rm -rf build",
+            "args": [],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build"
+            }
+        },
+    ]
+}

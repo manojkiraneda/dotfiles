@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${config:OPENBMC.SDKTARGETSYSROOT}/usr/include/**"
+            ]
+        }
+    ],
+    "version": 4
+}
