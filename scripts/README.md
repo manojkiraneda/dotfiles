@@ -1,5 +1,5 @@
 # openbmc-vscode
-`vscode-config` is a blunt basic python script that would take the sdk env file as input & the target directory & creates the vscode config files in `.vscode` folder so that the intellisense features work out of the box.
+`vscode-config` is a blunt basic python script that would take arm yocto generated sdk env file as input & the target directory & creates the vscode config files in `.vscode` folder so that the intellisense features work out of the box for openbmc repositories.
 
 ## Inputs to the script
 - sdk path - source sdk environment file
