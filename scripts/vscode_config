@@ -1,0 +1,132 @@
+#!/usr/bin/python3
+
+from operator import truediv
+import os
+import shlex
+import subprocess
+import json
+import pprint
+
+
+# Take inputs from user
+sdk_path = input("sdk env file path :  ")
+target_path = str(
+    input("target path where vscode config files should be generated [.] : ") or ".")
+cpp_standard = str(
+    input("cpp standard supported by project [c++20] : ") or "c++20")
+configure_command = str(
+    input("configure command [meson build] : ") or 'meson build')
+compile_command = str(
+    input("compile command [ninja -C build] : ") or 'ninja -C build')
+cleanup_command = str(
+    input("clean up command [rm -rf build] : ") or 'rm -rf build')
+
+
+command_in = "env -i bash -c 'source {} && env'".format(sdk_path)
+
+# print(command_in)
+
+command = shlex.split(command_in)
+proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+for line in proc.stdout.read().decode('utf8').splitlines(True):
+    # print(line)
+    try:
+        (key, _, value) = line.partition("=")
+        os.environ[key] = value.rstrip()
+    except TypeError:
+        pass
+proc.communicate()
+
+# print(dict(os.environ))
+
+# prepare the settings.json
+settings_dictionary = {}
+settings = {}
+settings["ARCH"] = os.environ["ARCH"]
+settings["OECORE_NATIVE_SYSROOT"] = os.environ["OECORE_NATIVE_SYSROOT"]
+settings["SDKTARGETSYSROOT"] = os.environ["SDKTARGETSYSROOT"]
+settings["CC"] = os.environ["CC"]
+settings["CXX"] = os.environ["CXX"]
+settings_dictionary["OPENBMC"] = settings
+
+# Serializing json
+json_object = json.dumps(settings_dictionary, indent=4)
+
+# Writing to sample.json
+os.makedirs(os.path.dirname(
+    '{}/.vscode/settings.json'.format(target_path)), exist_ok=True)
+with open(".vscode/settings.json", "w") as outfile:
+    outfile.write(json_object)
+
+# prepare the c_cpp_properties.json
+c_cpp_properties_dictionary = {}
+c_cpp_properties = {}
+c_cpp_properties["name"] = "Linux"
+include_path_list = ["${workspaceFolder}/**",
+                     "${config:OPENBMC.SDKTARGETSYSROOT}/usr/include/**"]
+c_cpp_properties["includePath"] = include_path_list
+c_cpp_properties["cppStandard"] = cpp_standard
+configurations_list = [c_cpp_properties]
+c_cpp_properties_dictionary["configurations"] = configurations_list
+c_cpp_properties_dictionary["version"] = 4
+
+# Serializing json
+json_object = json.dumps(c_cpp_properties_dictionary, indent=4)
+
+# Writing to sample.json
+os.makedirs(os.path.dirname(
+    '{}/.vscode/c_cpp_properties.json'.format(target_path)), exist_ok=True)
+with open(".vscode/c_cpp_properties.json", "w") as outfile:
+    outfile.write(json_object)
+
+
+# prepare the tasks.json
+task_dictionary = {}
+task_dictionary["version"] = "2.0.0"
+env_dictionary = {}
+for key, value in os.environ.items():
+    if key != "LS_COLORS":
+        env_dictionary[key] = value
+new_dic = {}
+new_dic["env"] = env_dictionary
+task_dictionary["options"] = new_dic
+presentation_dictionary = {}
+presentation_dictionary["echo"] = False
+presentation_dictionary["reveal"] = "always"
+presentation_dictionary["focus"] = True
+presentation_dictionary["panel"] = "dedicated"
+presentation_dictionary["showReuseMessage"] = True
+task_dictionary["presentation"] = presentation_dictionary
+default_task = {}
+default_task["label"] = "print env"
+default_task["type"] = "shell"
+default_task["command"] = "printenv"
+default_task["args"] = []
+default_task["problemMatcher"] = []
+config_task = {}
+config_task["label"] = "configure"
+config_task["type"] = "shell"
+config_task["command"] = configure_command
+config_task["problemMatcher"] = ["$gcc"]
+build_task = {}
+build_task["label"] = "build"
+build_task["type"] = "shell"
+build_task["command"] = compile_command
+build_task["problemMatcher"] = ["$gcc"]
+cleanup_task = {}
+cleanup_task["label"] = "cleanup"
+cleanup_task["type"] = "shell"
+cleanup_task["command"] = cleanup_command
+cleanup_task["problemMatcher"] = ["$gcc"]
+task_list = [default_task, config_task, build_task, cleanup_task]
+task_dictionary["tasks"] = task_list
+
+# pprint.pprint(task_dictionary)
+# Serializing json
+json_object = json.dumps(task_dictionary, indent=4)
+
+# Writing to sample.json
+os.makedirs(os.path.dirname(
+    '{}/.vscode/tasks.json'.format(target_path)), exist_ok=True)
+with open(".vscode/tasks.json", "w") as outfile:
+    outfile.write(json_object)
